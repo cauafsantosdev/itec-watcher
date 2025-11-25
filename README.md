@@ -56,8 +56,8 @@ To run the script on your local machine for testing or development purposes:
 1. Clone the repository:
 
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/REPO_NAME.git](https://github.com/YOUR_USERNAME/REPO_NAME.git)
-   cd REPO_NAME
+   git clone https://github.com/cauafsantosdev/itec-watcher.git
+   cd itec-watcher
    ```
 2. Install dependencies:
 
