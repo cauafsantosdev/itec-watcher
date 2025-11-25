@@ -1,0 +1,41 @@
+name: iTec Watcher
+
+on:
+  schedule:
+    # Runs at 20:00 (UTC-3)
+    - cron: '0 23 * * *' 
+  workflow_dispatch:
+
+jobs:
+  check-vagas:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v3
+
+      - name: Config Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Scraper
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python main.py
+
+      - name: Save alterations on JSON
+        run: |
+          git config user.name "iTec Watcher"
+          git config user.email "actions@github.com"
+          git add seen_opportunities.json
+          # Only commits if there are changes
+          git commit -m "Update: New opportunities detected [skip ci]" || exit 0
+          git push
