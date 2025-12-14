@@ -1,6 +1,6 @@
 # Scientific Initiation Opportunities Monitor - iTec FURG
 
-This project is an automation tool (web scraper) developed to daily monitor the call for proposals page of iTec (Center for Entrepreneurship and Innovation at FURG). The primary objective is to identify new Scientific Initiation (IC) scholarship opportunities as soon as they are published, ensuring a competitive advantage in the application process.
+This project is an automation tool (web scraper) developed to daily monitor the call for proposals page of iTec-FURG. The primary objective is to identify new Scientific Initiation (IC) scholarship opportunities as soon as they are published.
 
 ---
 
