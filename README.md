@@ -6,7 +6,7 @@ This project is an automation tool (web scraper) developed to daily monitor the 
 
 ## Overview
 
-The system operates autonomously using GitHub Actions infrastructure. It scans the target page at pre-defined intervals, compares the results with a local history, and notifies the user via GitHub Issues if a new opportunity matching the filter criteria is found.
+The system operates autonomously using GitHub Actions infrastructure. It scans the target page at pre-defined intervals, compares the results with a local history, and notifies the user via GitHub Issues and Discord if a new opportunity matching the filter criteria is found.
 
 ---
 
@@ -15,7 +15,7 @@ The system operates autonomously using GitHub Actions infrastructure. It scans t
 * **Continuous Monitoring:** Automatic daily execution via cron jobs.
 * **Smart Filtering:** Uses keywords to specifically identify "Scientific Initiation" opportunities, ignoring other types of announcements.
 * **Data Persistence:** Maintains a history of previously seen links in a JSON file, preventing duplicate notifications.
-* **Integrated Notifications:** Automatically creates an Issue in the repository with the link and title of the detected opportunity, triggering an email alert to the owner.
+* **Integrated Notifications:** Automatically creates an Issue in the repository with the link and title of the detected opportunity, triggering an email alert to the owner. Can also send a message to your Discord server if a Webhook is provided.
 * **Zero Cost:** Serverless architecture based entirely on the GitHub Actions free tier.
 
 ---
@@ -43,7 +43,7 @@ The execution flow follows these steps:
    * It compares the extracted links against the history.
    * It checks if the new links contain keywords such as "Iniciação Científica" or "IC".
 5. **Action:**
-   * If a new and relevant opportunity is found: An Issue is created in the repository.
+   * If a new and relevant opportunity is found: An Issue is created in the repository and a message is sent through the Discord webhook.
    * If it is the first execution: It populates the database without notifying.
 6. **Persistence:** The system updates the `seen_opportunities.json` file and commits the changes back to the repository.
 
@@ -63,8 +63,10 @@ To run the script on your local machine for testing or development purposes:
 
    ```bash
    pip install -r requirements.txt
-   ```
-3. Run the script:
+
+3. Create your .env file following the .envexample
+
+4. Run the script:
 
    ```bash
    python main.py
