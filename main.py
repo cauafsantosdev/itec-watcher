@@ -4,7 +4,9 @@ import json
 import requests
 from typing import Optional
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Basic configuration
 TARGET_URL = "https://itecfurg.org/?page_id=2695"
@@ -87,6 +89,29 @@ def create_issue(title: str, link: str) -> None:
     else:
         print(f"❌ Error creating issue: {resp.status_code} - {resp.text}")
 
+def send_hook(title: str, link: str) -> None:
+    """
+    Send a notification to a webhook for a new opportunity.
+
+    Args:
+        title (str): Title of the opportunity.
+        link (str): URL of the opportunity.
+    """
+    webhook_url = os.getenv("WEBHOOK_URL")
+    if not webhook_url:
+        print("ERROR: Webhook URL environment variable not found.")
+        return
+
+    payload = {
+        "content": f"Vaga nova no iTec: {title}\nLink: {link}\n@everyone"
+    }
+    
+    resp = requests.post(webhook_url, json=payload)
+    if resp.status_code == 200 or resp.status_code == 204:
+        print(f"Sent webhook notification for: {title}")
+    else:
+        print(f"❌ Error sending webhook: {resp.status_code} - {resp.text}")
+
 def main():
     """
     Crawls the iTec website for new IC opportunities, updates the local database, and creates issues for new findings.
@@ -152,6 +177,7 @@ def main():
                 if not first_exec:
                     print(f"New IC opportunity: {text}")
                     create_issue(text, href)
+                    send_hook(text, href)
                 else:
                     print(f"Adding to initial history): {text}")
 
