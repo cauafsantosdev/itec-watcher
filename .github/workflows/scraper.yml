@@ -39,3 +39,26 @@ jobs:
           # Only commits if there are changes
           git commit -m "Update: New opportunities detected [skip ci]" || exit 0
           git push
+
+      - name: Clean up issues older than 30 days
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Calcula a data de 30 dias atrás
+          DATE_LIMIT=$(date -d "30 days ago" +"%Y-%m-%d")
+          
+          echo "Buscando issues criadas antes de $DATE_LIMIT..."
+          
+          # Busca os números das issues abertas criadas antes da data limite
+          OLD_ISSUES=$(gh issue list --state open --search "created:<$DATE_LIMIT" --json number --jq '.[].number')
+          
+          if [ -z "$OLD_ISSUES" ]; then
+            echo "Nenhuma issue com mais de 30 dias encontrada."
+          else
+            for ISSUE in $OLD_ISSUES; do
+              echo "Fechando issue #$ISSUE..."
+              gh issue close $ISSUE \
+                --reason "completed" \
+                --comment "Esta issue foi fechada automaticamente pelo \`iTec Watcher\` por estar aberta há mais de 30 dias."
+            done
+          fi
